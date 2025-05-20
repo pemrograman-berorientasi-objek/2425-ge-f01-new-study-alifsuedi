@@ -1,34 +1,44 @@
 package pbo;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
-@Table(name = "courses")
+@Table(name = "course")
 public class Course {
     @Id
-    private String code;
-    private String name;
+    @Column(name = "kode", length = 10, nullable = false)
+    private String kode;
+
+    @Column(name = "nama", length = 50, nullable = false)
+    private String nama;
+
+    @Column(name = "semester", nullable = false)
     private int semester;
-    private int credit;
+
+    @Column(name = "kredit", nullable = false)
+    private int kredit;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public Course() {}
-    public Course(String code, String name, int semester, int credit) {
-        this.code = code;
-        this.name = name;
+
+    public Course(String kode, String nama, int semester, int kredit) {
+        this.kode = kode;
+        this.nama = nama;
         this.semester = semester;
-        this.credit = credit;
+        this.kredit = kredit;
     }
 
-    public String getCode() {
-        return code;
-    }
-    public String getName() {
-        return name;
-    }
-    public int getSemester() {
-        return semester;
-    }
-    public int getCredit() {
-        return credit;
+    public String getKode() { return kode; }
+    public String getNama() { return nama; }
+    public int getSemester() { return semester; }
+    public int getKredit() { return kredit; }
+    public List<Enrollment> getEnrollments() { return enrollments; }
+
+    @Override
+    public String toString() {
+        return kode + "|" + nama + "|" + semester + "|" + kredit;
     }
 }

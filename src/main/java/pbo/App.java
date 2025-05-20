@@ -1,75 +1,93 @@
 package pbo;
 
-import javax.persistence.*;
+/**
+ * @author 12S23025 Alif Aflah Suedi
+ * @author 12S23039 Prisca Manurung
+ */
+
 import java.util.*;
+import javax.persistence.*;
 
 public class App {
+    private static EntityManagerFactory factory;
+    private static EntityManager entityManager;
+
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("f01PU");
-        EntityManager em = emf.createEntityManager();
-        Scanner sc = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in);
 
-        while (sc.hasNextLine()) {
-            String line = sc.nextLine().trim();
-            if (line.equals("---")) break;
-            String[] parts = line.split("#");
-            String cmd = parts[0];
+        factory = Persistence.createEntityManagerFactory("study_plan_pu");
+        entityManager = factory.createEntityManager();
 
-            em.getTransaction().begin();
+        while (scan.hasNext()) {
+            String commandLine = scan.nextLine();
+            if (commandLine.equals("---")) break;
 
-            switch (cmd) {
-            case "student-add":
-            if (em.find(Student.class, parts[1]) == null) {
-            em.persist(new Student(parts[1], parts[2], parts[3]));
-            }
-            break;
-            case "student-show-all":
-                    em.createQuery("SELECT s FROM Student s ORDER BY s.nim", Student.class)
-                    .getResultList()
-                    .forEach(s -> System.out.println(s.getNim() + "|" + s.getName() + "|" + s.getProdi()));
-                break;
-            case "course-add":
-                if (em.find(Course.class, parts[1]) == null) {
-                em.persist(new Course(parts[1], parts[2], Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
-            }
-            break;
+            String[] strTemp = commandLine.split("#");
+            switch (strTemp[0]) {
+                case "student-add":
+                    entityManager.getTransaction().begin();
+                    String nim = strTemp[1];
+                    String nama = strTemp[2];
+                    String prodi = strTemp[3];
+                    if (entityManager.find(Student.class, nim) == null) {
+                        entityManager.persist(new Student(nim, nama, prodi));
+                    }
+                    entityManager.getTransaction().commit();
+                    break;
+                case "student-show-all":
+                    List<Student> students = entityManager.createQuery("SELECT s FROM Student s", Student.class)
+                        .getResultList();
+                    students.stream()
+                        .sorted(Comparator.comparing(Student::getNim))
+                        .forEach(s -> System.out.println(s));
+                    break;
+                case "course-add":
+                    entityManager.getTransaction().begin();
+                    String kode = strTemp[1];
+                    String namaMK = strTemp[2];
+                    int semester = Integer.parseInt(strTemp[3]);
+                    int kredit = Integer.parseInt(strTemp[4]);
+                    if (entityManager.find(Course.class, kode) == null) {
+                        entityManager.persist(new Course(kode, namaMK, semester, kredit));
+                    }
+                    entityManager.getTransaction().commit();
+                    break;
                 case "course-show-all":
-                    em.createQuery("SELECT c FROM Course c ORDER BY c.semester, c.code", Course.class)
-                        .getResultList()
-                        .forEach(c -> System.out.println(c.getCode() + "|" + c.getName() + "|" + c.getSemester() + "|" + c.getCredit()));
+                    List<Course> courses = entityManager.createQuery("SELECT c FROM Course c", Course.class)
+                        .getResultList();
+                    courses.stream()
+                        .sorted(Comparator.comparing(Course::getSemester).thenComparing(Course::getKode))
+                        .forEach(c -> System.out.println(c));
                     break;
                 case "enroll":
-                    Student st = em.find(Student.class, parts[1]);
-                    Course cr = em.find(Course.class, parts[2]);
-                    if (st != null && cr != null) {
-                        // Cek jika sudah pernah enroll
-                        Long count = em.createQuery(
-                            "SELECT COUNT(e) FROM Enrollment e WHERE e.student.nim = :nim AND e.course.code = :code", Long.class)
-                            .setParameter("nim", parts[1])
-                            .setParameter("code", parts[2])
-                            .getSingleResult();
-                        if (count == 0) {
-                            em.persist(new Enrollment(st, cr));
+                    entityManager.getTransaction().begin();
+                    String nimEnroll = strTemp[1];
+                    String kodeEnroll = strTemp[2];
+                    Student stu = entityManager.find(Student.class, nimEnroll);
+                    Course cour = entityManager.find(Course.class, kodeEnroll);
+                    if (stu != null && cour != null) {
+                        boolean already = stu.getEnrollments().stream()
+                            .anyMatch(e -> e.getCourse().getKode().equals(kodeEnroll));
+                        if (!already) {
+                            Enrollment enr = new Enrollment(stu, cour);
+                            entityManager.persist(enr);
+                            stu.getEnrollments().add(enr);
+                            cour.getEnrollments().add(enr);
                         }
                     }
+                    entityManager.getTransaction().commit();
                     break;
                 case "student-show":
-                     Student s = em.find(Student.class, parts[1]);
-                    if (s != null) {
-                    System.out.println(s.getNim() + "|" + s.getName() + "|" + s.getProdi());
-                    List<Course> courses = em.createQuery(
-                    "SELECT e.course FROM Enrollment e WHERE e.student.nim = :nim ORDER BY e.course.semester, e.course.code", Course.class)
-                    .setParameter("nim", parts[1])
-                    .getResultList();
-                    for (Course c : courses) {
-                    System.out.println(c.getCode() + "|" + c.getName() + "|" + c.getSemester() + "|" + c.getCredit());
-                 }
-                }
-                 break;
+                    String nimShow = strTemp[1];
+                    Student s = entityManager.find(Student.class, nimShow);
+                    if (s != null) s.printDetail();
+                    break;
+                default:
+                    System.out.println("Invalid Input!");
             }
-            em.getTransaction().commit();
         }
-        em.close();
-        emf.close();
+        scan.close();
+        entityManager.close();
+        factory.close();
     }
 }
