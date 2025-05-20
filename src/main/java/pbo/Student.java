@@ -40,8 +40,7 @@ public class Student {
     public void printDetail() {
         System.out.println(this);
         enrollments.stream()
-            .map(Enrollment::getCourse)
-            .sorted(Comparator.comparing(Course::getSemester).thenComparing(Course::getKode))
-            .forEach(c -> System.out.println(c));
+            .sorted(Comparator.comparing(e -> e.getCourse().getKode()))
+            .forEach(e -> System.out.println(e.getCourse()));
     }
 }

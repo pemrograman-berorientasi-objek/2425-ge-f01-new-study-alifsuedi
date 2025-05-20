@@ -4,18 +4,18 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "enrollment")
+@Table(name = "ENROLLMENTS")
 public class Enrollment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "student_nim", referencedColumnName = "nim")
+    @JoinColumn(name = "STUDENT_NIM", referencedColumnName = "nim")
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "course_kode", referencedColumnName = "kode")
+    @JoinColumn(name = "COURSE_CODE", referencedColumnName = "kode")
     private Course course;
 
     public Enrollment() {}
