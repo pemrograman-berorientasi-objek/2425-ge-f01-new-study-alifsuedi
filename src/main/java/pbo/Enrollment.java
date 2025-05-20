@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Enrollment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; // Ubah dari Long ke int
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "student_nim", referencedColumnName = "nim")
