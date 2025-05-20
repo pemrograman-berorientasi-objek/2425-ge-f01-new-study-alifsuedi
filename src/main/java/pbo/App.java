@@ -1,10 +1,5 @@
 package pbo;
 
-/**
- * @author 12S23025 Alif Aflah Suedi
- * @author 12S23039 Prisca Manurung
- */
-
 import java.util.*;
 import javax.persistence.*;
 
@@ -34,13 +29,6 @@ public class App {
                     }
                     entityManager.getTransaction().commit();
                     break;
-                case "student-show-all":
-                    List<Student> students = entityManager.createQuery("SELECT s FROM Student s", Student.class)
-                        .getResultList();
-                    students.stream()
-                        .sorted(Comparator.comparing(Student::getNim))
-                        .forEach(s -> System.out.println(s));
-                    break;
                 case "course-add":
                     entityManager.getTransaction().begin();
                     String kode = strTemp[1];
@@ -51,13 +39,6 @@ public class App {
                         entityManager.persist(new Course(kode, namaMK, semester, kredit));
                     }
                     entityManager.getTransaction().commit();
-                    break;
-                case "course-show-all":
-                    List<Course> courses = entityManager.createQuery("SELECT c FROM Course c", Course.class)
-                        .getResultList();
-                    courses.stream()
-                        .sorted(Comparator.comparing(Course::getSemester).thenComparing(Course::getKode))
-                        .forEach(c -> System.out.println(c));
                     break;
                 case "enroll":
                     entityManager.getTransaction().begin();
@@ -82,10 +63,19 @@ public class App {
                     Student s = entityManager.find(Student.class, nimShow);
                     if (s != null) s.printDetail();
                     break;
-                case "student-detail":
-                    String nimDetail = strTemp[1];
-                    Student sDetail = entityManager.find(Student.class, nimDetail);
-                    if (sDetail != null) sDetail.printDetail();
+                case "student-show-all":
+                    List<Student> students = entityManager.createQuery("SELECT s FROM Student s", Student.class)
+                        .getResultList();
+                    students.stream()
+                        .sorted(Comparator.comparing(Student::getNim))
+                        .forEach(st -> System.out.println(st));
+                    break;
+                case "course-show-all":
+                    List<Course> courses = entityManager.createQuery("SELECT c FROM Course c", Course.class)
+                        .getResultList();
+                    courses.stream()
+                        .sorted(Comparator.comparing(Course::getSemester).thenComparing(Course::getKode))
+                        .forEach(c -> System.out.println(c));
                     break;
                 default:
                     System.out.println("Invalid Input!");
