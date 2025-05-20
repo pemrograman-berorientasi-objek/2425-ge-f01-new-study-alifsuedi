@@ -2,7 +2,6 @@ package pbo;
 
 import javax.persistence.*;
 import java.util.*;
-import java.io.*;
 
 public class App {
     public static void main(String[] args) {
@@ -20,16 +19,20 @@ public class App {
 
             switch (cmd) {
             case "student-add":
+            if (em.find(Student.class, parts[1]) == null) {
             em.persist(new Student(parts[1], parts[2], parts[3]));
+            }
             break;
             case "student-show-all":
-            em.createQuery("SELECT s FROM Student s ORDER BY s.nim", Student.class)
-            .getResultList()
-            .forEach(s -> System.out.println(s.getNim() + "|" + s.getName() + "|" + s.getProdi()));
-             break;
-                case "course-add":
-                    em.persist(new Course(parts[1], parts[2], Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
-                    break;
+                    em.createQuery("SELECT s FROM Student s ORDER BY s.nim", Student.class)
+                    .getResultList()
+                    .forEach(s -> System.out.println(s.getNim() + "|" + s.getName() + "|" + s.getProdi()));
+                break;
+            case "course-add":
+                if (em.find(Course.class, parts[1]) == null) {
+                em.persist(new Course(parts[1], parts[2], Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
+            }
+            break;
                 case "course-show-all":
                     em.createQuery("SELECT c FROM Course c ORDER BY c.semester, c.code", Course.class)
                         .getResultList()
