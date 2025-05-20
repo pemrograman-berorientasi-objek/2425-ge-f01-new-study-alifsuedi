@@ -1,57 +1,29 @@
 package pbo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "students")
 public class Student {
-
     @Id
-    @Column(name = "nim", nullable = false, length = 20)
     private String nim;
-    @Column(name = "name", nullable = false, length = 30)
     private String name;
-    @Column(name = "major", nullable = false, length = 15)
-    private String major;
+    private String prodi;
 
-    
-
-    public Student(String nim, String name, String major) {
+    public Student() {}
+    public Student(String nim, String name, String prodi) {
         this.nim = nim;
         this.name = name;
-        this.major = major;
+        this.prodi = prodi;
     }
 
-    // GETTER
     public String getNim() {
         return nim;
     }
-    
     public String getName() {
         return name;
     }
-    
-    public String major() {
-        return major;
-    }
-    
-    // SETTER
-    public void setNim(String nim) {
-        this.nim = nim;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setmajor(String major) {
-        this.major = major;
-    }
-
-    @Override
-    public String toString() {
-        return nim + "|" + name + "|" + major;
+    public String getProdi() {
+        return prodi;
     }
 }

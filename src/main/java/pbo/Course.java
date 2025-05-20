@@ -1,65 +1,34 @@
 package pbo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "courses")
 public class Course {
-
     @Id
-    @Column(name = "name", nullable = false, length = 30)
-    private String name;
-    @Column(name = "code", nullable = false, length = 30)
     private String code;
-    @Column(name = "years", nullable = false, length = 30)
-    private int years;
-    @Column(name = "credit", nullable = false, length = 30)
+    private String name;
+    private int semester;
     private int credit;
-    
 
-    public Course(String name, String code, int years, int credit) {
-        this.name = name;
+    public Course() {}
+    public Course(String code, String name, int semester, int credit) {
         this.code = code;
-        this.years = years;
+        this.name = name;
+        this.semester = semester;
         this.credit = credit;
     }
 
-    // GETTER
-    public String getName() {
-        return name;
-    }
-   
     public String getCode() {
         return code;
     }
-   
-    public int getYears() {
-        return years;
+    public String getName() {
+        return name;
     }
-
+    public int getSemester() {
+        return semester;
+    }
     public int getCredit() {
         return credit;
-    }
-
-    // SETTER
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setCode(String code) {
-        this.code = code;
-    }
-    public void setYears(int years) {
-        this.years = years;
-    }
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
-
-    @Override
-    public String toString() {
-        return name + "|" + code + "|" + years + "|" + credit;
     }
 }
