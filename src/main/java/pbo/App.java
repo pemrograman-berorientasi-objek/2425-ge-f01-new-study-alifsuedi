@@ -54,9 +54,16 @@ public class App {
                     }
                     break;
                 case "student-show":
-                 Student s1 = em.find(Student.class, parts[1]);
-                 if (s1 != null) {
-                 System.out.println(s1.getNim() + "|" + s1.getName() + "|" + s1.getProdi());
+                     Student s1 = em.find(Student.class, parts[1]);
+                    if (s1 != null) {
+                    System.out.println(s1.getNim() + "|" + s1.getName() + "|" + s1.getProdi());
+                    List<Course> courses = em.createQuery(
+                    "SELECT e.course FROM Enrollment e WHERE e.student.nim = :nim ORDER BY e.course.semester, e.course.code", Course.class)
+                    .setParameter("nim", parts[1])
+                    .getResultList();
+                    for (Course c : courses) {
+                    System.out.println(c.getCode() + "|" + c.getName() + "|" + c.getSemester() + "|" + c.getCredit());
+                 }
                 }
                  break;
                 case "student-detail":
