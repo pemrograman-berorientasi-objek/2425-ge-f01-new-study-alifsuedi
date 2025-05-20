@@ -20,5 +20,4 @@ public class Enrollment {
         this.student = student;
         this.course = course;
     }
-    // getters & setters
 }
