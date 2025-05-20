@@ -82,6 +82,11 @@ public class App {
                     Student s = entityManager.find(Student.class, nimShow);
                     if (s != null) s.printDetail();
                     break;
+                case "student-detail":
+                    String nimDetail = strTemp[1];
+                    Student sDetail = entityManager.find(Student.class, nimDetail);
+                    if (sDetail != null) sDetail.printDetail();
+                    break;
                 default:
                     System.out.println("Invalid Input!");
             }
