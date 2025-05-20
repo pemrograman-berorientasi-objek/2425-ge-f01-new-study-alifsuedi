@@ -54,6 +54,11 @@ public class App {
                     }
                     break;
                 case "student-show":
+                 Student s1 = em.find(Student.class, parts[1]);
+                 if (s1 != null) {
+                 System.out.println(s1.getNim() + "|" + s1.getName() + "|" + s1.getProdi());
+                }
+                 break;
                 case "student-detail":
                     Student s = em.find(Student.class, parts[1]);
                     if (s != null) {
