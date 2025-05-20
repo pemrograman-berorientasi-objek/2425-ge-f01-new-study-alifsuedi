@@ -3,7 +3,6 @@ package pbo;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "students")
 public class Student {
     @Id
     private String nim;
@@ -16,14 +15,7 @@ public class Student {
         this.name = name;
         this.prodi = prodi;
     }
-
-    public String getNim() {
-        return nim;
-    }
-    public String getName() {
-        return name;
-    }
-    public String getProdi() {
-        return prodi;
-    }
+    public String getNim() { return nim; }
+    public String getName() { return name; }
+    public String getProdi() { return prodi; }
 }

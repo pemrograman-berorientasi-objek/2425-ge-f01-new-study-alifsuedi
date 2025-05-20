@@ -19,14 +19,14 @@ public class App {
             em.getTransaction().begin();
 
             switch (cmd) {
-                case "student-add":
-                    em.persist(new Student(parts[1], parts[2], parts[3]));
-                    break;
-                case "student-show-all":
-                    em.createQuery("SELECT s FROM Student s ORDER BY s.nim", Student.class)
-                        .getResultList()
-                        .forEach(s -> System.out.println(s.getNim() + "|" + s.getName() + "|" + s.getProdi()));
-                    break;
+            case "student-add":
+            em.persist(new Student(parts[1], parts[2], parts[3]));
+            break;
+            case "student-show-all":
+            em.createQuery("SELECT s FROM Student s ORDER BY s.nim", Student.class)
+            .getResultList()
+            .forEach(s -> System.out.println(s.getNim() + "|" + s.getName() + "|" + s.getProdi()));
+             break;
                 case "course-add":
                     em.persist(new Course(parts[1], parts[2], Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
                     break;
